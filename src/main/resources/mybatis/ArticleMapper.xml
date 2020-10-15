@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sgg.web.mapper.ArticleMapper">
+
+  <insert id="insert" parameterType="com.sgg.web.model.Article">
+    insert into article (article_id, user_id, article_title, 
+      article_views, article_comment_count, article_state, 
+      article_create_date, article_modify_date)
+    values (#{articleId,jdbcType=INTEGER}, #{userId,jdbcType=INTEGER}, #{articleTitle,jdbcType=VARCHAR}, 
+      #{articleViews,jdbcType=INTEGER}, #{articleCommentCount,jdbcType=INTEGER}, #{articleState,jdbcType=BIT}, 
+      #{articleCreateDate,jdbcType=TIMESTAMP}, #{articleModifyDate,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertContent" parameterType="java.util.HashMap">
+    insert into article_content (article_id, article_content)
+    values (#{articleId,jdbcType=INTEGER}, #{articleContent,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.sgg.web.model.Article" useGeneratedKeys="true" keyProperty="articleId">
+    insert into article
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="articleId != null">
+        article_id,
+      </if>
+      <if test="userId != null">
+        user_id,
+      </if>
+      <if test="articleTitle != null">
+        article_title,
+      </if>
+      <if test="articleViews != null">
+        article_views,
+      </if>
+      <if test="articleCommentCount != null">
+        article_comment_count,
+      </if>
+      <if test="articleState != null">
+        article_state,
+      </if>
+      <if test="articleCreateDate != null">
+        article_create_date,
+      </if>
+      <if test="articleModifyDate != null">
+        article_modify_date,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="articleId != null">
+        #{articleId,jdbcType=INTEGER},
+      </if>
+      <if test="userId != null">
+        #{userId,jdbcType=INTEGER},
+      </if>
+      <if test="articleTitle != null">
+        #{articleTitle,jdbcType=VARCHAR},
+      </if>
+      <if test="articleViews != null">
+        #{articleViews,jdbcType=INTEGER},
+      </if>
+      <if test="articleCommentCount != null">
+        #{articleCommentCount,jdbcType=INTEGER},
+      </if>
+      <if test="articleState != null">
+        #{articleState,jdbcType=BIT},
+      </if>
+      <if test="articleCreateDate != null">
+        #{articleCreateDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="articleModifyDate != null">
+        #{articleModifyDate,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+
+    <select id="getRawLimit" resultType="com.sgg.web.model.Article">
+        select article_id, user_id, article_title, article_views,
+        article_comment_count, article_state, article_create_date, article_modify_date
+        from article limit #{offset},#{pageSize}
+    </select>
+
+    <select id="getRawById" resultType="java.lang.String">
+        select article_content from article_content
+        where article_id = #{id}
+    </select>
+
+    <delete id="deleteRaw" parameterType="java.lang.Integer">
+        delete from article where article_id = #{id}
+    </delete>
+
+    <delete id="deleteArticleContent" parameterType="java.lang.Integer">
+        delete from article_content where article_id = #{articleId}
+    </delete>
+
+    <update id="updateRaw" parameterType="com.sgg.web.model.Article">
+        update article
+        set article_title = #{articleTitle}
+        where article_id = #{articleId}
+    </update>
+
+    <update id="updateArticleContent" parameterType="java.util.HashMap">
+        update article_content set
+        article_content = #{articleContent}
+        where article_id = #{articleId}
+    </update>
+
+</mapper>
